@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="index.css"/>
+    <link rel="stylesheet" href="animate.css"/>
+</head>
+<body>
+<div id="main">
+    <ul id="list">
+        <li class="zIndex">
+            <div class="a1">
+                <div class="a1-1">
+                    <span>关注更多</span>
+                </div>
+                <div class="a1-2">
+                    <span></span>
+                </div>
+                <div class="a1-3">
+                    <div class="a1-3-1">
+                        <p>杨</p>
+                        <p>永</p>
+                        <p>山</p>
+                    </div>
+                    <div class="a1-3-2">
+                        <p></p>
+                    </div>
+                    <div class="a1-3-3">
+                        <p>个</p>
+                        <p>人</p>
+                        <p>简</p>
+                        <p>历</p>
+                    </div>
+                </div>
+            </div>
+
+        </li>
+        <li>
+            <div class="a2">
+                <div class="a2-1">
+                    <p>给我一个</p>
+                    <p>学习工作的机会，</p>
+                    <p>我将还您100个满意</p>
+                </div>
+                <div class="a2-2">
+                    <p>我</p>
+                    <p>一个90后</p>
+                    <p>
+                        我虽说没有才华横溢，学富五车，但我对web前端开发具有浓厚的兴趣，工作之余经常关注前端技术方面的发展趋势，并且具有扎实的技术能力以及优良的代码风格，刻苦认真、虚心好学。期望能在以后的工作和生活中，不断实现自我的人生价值和追求的目标。</p>
+                </div>
+        </li>
+        <li>
+            <div class="a3">
+                <div class="a3-1 animated flipInY "></div>
+                <div class="a3-2">
+                    <div></div>
+                    <div>
+                        <p>JavaScript</p>
+                    </div>
+                </div>
+                <div class="a3-3">
+                    <div></div>
+                    <div>
+                        <p>HTML5+CSS3</p>
+                    </div>
+                </div>
+                <div class="a3-4">
+                    <div></div>
+                    <div>
+                        <p>jQuery</p>
+                    </div>
+                </div>
+                <div class="a3-5 ">
+                    <div class="animated zoomInLeft"></div>
+                    <div>
+                        <p>DIV+CSS</p>
+                    </div>
+                </div>
+                <div class="a3-6">
+                    <div class="animated fadeInRightBig"></div>
+                    <div>
+                        <p>Ajax</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li >
+        <div class="a4">
+            <span class="animated zoomInUp infinite" >谢谢欣赏</span>
+            <span>!</span>
+        </div>
+        </li>
+    </ul>
+    <div id="audio-btn" class="audio-btn rotate">
+        <audio src="image/1.mp3" id="media" ></audio>
+    </div>
+</div>
+<script>
+    var main = document.querySelector("#main");
+    var oLis = document.querySelectorAll("#list>li");
+    var winW = document.documentElement.clientWidth;
+    var winH = document.documentElement.clientHeight;
+    var desW = 640;
+    var desH = 1008;
+    if (winW / winH < desW / desH) {
+        main.style.webkitTransform = "scale(" + winH / desH + ")";
+    } else {
+        main.style.webkitTransform = "scale(" + winW / desW + ")";
+    }
+
+    [].forEach.call(oLis, function () {
+        var oLi = arguments[0];
+        oLi.index = arguments[1];
+        oLi.addEventListener("touchstart", start, false);
+        oLi.addEventListener("touchmove", move, false);
+        oLi.addEventListener("touchend", end, false);
+    });
+
+    function start(e) {
+
+        this.startX = e.changedTouches[0].pageY;
+    }
+    function move(e) {
+        this.flag = true;
+        e.preventDefault();
+        var moveTouch = e.changedTouches[0].pageY;
+        var movePos = moveTouch - this.startX;
+        var index = this.index;
+        [].forEach.call(oLis, function () {
+            arguments[0].className = "";
+            if (arguments[1] != index) {
+                arguments[0].style.display = "none"
+            }
+            arguments[0].firstElementChild.id = "";
+
+        });
+        if (movePos > 0) {
+            this.prevSIndex = (index == 0 ? oLis.length - 1 : index - 1);
+            //oLis[this.prevSIndex].style.webkitTransform = "translate(0,"+(-winH+movePos)+"px)";
+            var duration = -winH + movePos;
+        } else if (movePos < 0) {
+            this.prevSIndex = (index == oLis.length - 1 ? 0 : index + 1);
+            //oLis[this.prevSIndex].style.webkitTransform = "translate(0,"+(winH+movePos)+"px)";
+            var duration = winH + movePos;
+        }
+        //缩放值是0~~1之间的数
+        this.style.webkitTransform = "scale(" + (1 - Math.abs(movePos) / winH * 1 / 2) + ")  translate(0," + movePos + "px)";
+        oLis[this.prevSIndex].style.webkitTransform = "translate(0," + duration + "px)";
+        oLis[this.prevSIndex].className = 'zIndex';
+        oLis[this.prevSIndex].style.display = "block";
+    }
+    function end(e) {
+
+        if (this.flag) {
+            oLis[this.prevSIndex].style.webkitTransform = "translate(0,0)";
+            oLis[this.prevSIndex].style.webkitTransition = "0.5s ease-out";
+            oLis[this.prevSIndex].addEventListener("webkitTransitionEnd", function (e) {
+                if (e.target.tagName == "LI") {
+                    this.style.webkitTransition = "";
+                }
+                this.firstElementChild.id = "a" + (this.index + 1);
+            }, false)
+        }
+    }
+    document.addEventListener("touchmove", function () {
+    }, false);
+
+    var audioBtn = document.querySelector("#audio-btn");
+    var media = document.querySelector("#media");
+
+    audioBtn.onclick = function () {
+        if (media.paused) {
+            media.play();
+            audioBtn.id = "audio-btn";
+        }
+        else {
+            media.pause();
+            audioBtn.id = "";
+        }
+    };
+
+</script>
+
+</body>
+</html>
